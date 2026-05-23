@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700&display=swap');
+
+:root {
+  --green: #00ff88;
+  --bg: #050e08;
+  --card: #0a1a0f;
+  --border: #1a3a22;
+  --text: #c8e6c9;
+  --red: #ff4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.015) 2px, rgba(0,255,136,0.015) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+button { cursor: pointer; }
+input, textarea { outline: none; }
