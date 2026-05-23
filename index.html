@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЧЕРЕМША — Следующее Поколение</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700&display=swap');
+
+  :root {
+    --green: #00ff88;
+    --dark-green: #00b35a;
+    --bg: #050e08;
+    --card: #0a1a0f;
+    --border: #1a3a22;
+    --text: #c8e6c9;
+    --accent: #ff4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Scan lines overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,255,136,0.02) 2px,
+      rgba(0,255,136,0.02) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(5,14,8,0.95);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 22px;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px var(--green);
+  }
+
+  .logo span { color: white; }
+
+  nav ul {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  nav ul a {
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--green); }
+
+  .nav-badge {
+    background: var(--green);
+    color: var(--bg);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 16px;
+    letter-spacing: 2px;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 80px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,255,136,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(48px, 6vw, 96px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+    color: white;
+  }
+
+  .hero h1 .glow {
+    color: var(--green);
+    text-shadow: 0 0 40px var(--green), 0 0 80px rgba(0,255,136,0.3);
+    display: block;
+  }
+
+  .hero-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: rgba(200,230,201,0.5);
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(200,230,201,0.7);
+    max-width: 480px;
+    margin-bottom: 40px;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--bg);
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 14px 32px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .btn-primary:hover {
+    background: white;
+    box-shadow: 0 0 30px var(--green);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--green);
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 13px 32px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid var(--green);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(0,255,136,0.1);
+  }
+
+  /* Hero image side */
+  .hero-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+  }
+
+  .product-showcase {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .product-frame {
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 4px;
+    position: relative;
+  }
+
+  .product-frame::before, .product-frame::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--green);
+    border-style: solid;
+  }
+  .product-frame::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .product-frame::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  .product-frame img {
+    width: 100%;
+    display: block;
+    filter: saturate(0.8) brightness(0.9);
+    mix-blend-mode: luminosity;
+  }
+
+  .product-frame .img-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #0a2010 0%, #051008 50%, #0d2515 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .img-placeholder .big-icon { font-size: 80px; opacity: 0.4; }
+  .img-placeholder .label { font-size: 11px; letter-spacing: 4px; opacity: 0.6; text-transform: uppercase; }
+
+  .product-label {
+    position: absolute;
+    bottom: 16px; left: 16px;
+    background: rgba(5,14,8,0.9);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--green);
+    text-transform: uppercase;
+  }
+
+  .specs-ticker {
+    width: 100%;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(0,255,136,0.5);
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .specs-ticker span {
+    display: inline-block;
+    animation: ticker 20s linear infinite;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* SPECS STRIP */
+  .specs-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .spec-item {
+    padding: 32px 24px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .spec-item:last-child { border-right: none; }
+  .spec-item:hover { background: rgba(0,255,136,0.03); }
+
+  .spec-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(0,255,136,0.3);
+    display: block;
+  }
+
+  .spec-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(200,230,201,0.5);
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* FEATURES */
+  .section {
+    padding: 80px 40px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .section-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 3px;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(24px, 3vw, 40px);
+    font-weight: 700;
+    color: white;
+    letter-spacing: -1px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .feature-card {
+    background: var(--card);
+    padding: 40px 32px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--green);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .feature-card:hover { background: #0d2018; }
+  .feature-card:hover::before { transform: scaleX(1); }
+
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .feature-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(200,230,201,0.6);
+  }
+
+  /* QUOTE */
+  .quote-section {
+    padding: 80px 40px;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quote-section::before {
+    content: '«';
+    position: absolute;
+    top: -60px; left: 20px;
+    font-size: 300px;
+    color: rgba(0,255,136,0.03);
+    font-family: 'Orbitron', monospace;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .quote-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  blockquote {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(13px, 1.5vw, 17px);
+    line-height: 2;
+    color: rgba(200,230,201,0.8);
+    max-width: 900px;
+    border-left: 3px solid var(--green);
+    padding-left: 32px;
+    margin-bottom: 24px;
+  }
+
+  .quote-source {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    color: rgba(0,255,136,0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding-left: 35px;
+  }
+
+  /* MODELS */
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .model-card {
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 32px;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+
+  .model-card:hover {
+    border-color: var(--green);
+    box-shadow: 0 0 30px rgba(0,255,136,0.05);
+  }
+
+  .model-card.featured {
+    border-color: var(--green);
+  }
+
+  .model-badge {
+    position: absolute;
+    top: -1px; right: 24px;
+    background: var(--green);
+    color: var(--bg);
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 12px;
+    letter-spacing: 2px;
+  }
+
+  .model-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .model-subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(0,255,136,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .model-price {
+    font-family: 'Orbitron', monospace;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+
+  .model-price-note {
+    font-size: 12px;
+    color: rgba(200,230,201,0.4);
+    margin-bottom: 24px;
+  }
+
+  .model-features {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+
+  .model-features li {
+    font-size: 13px;
+    color: rgba(200,230,201,0.7);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .model-features li::before {
+    content: '▸';
+    color: var(--green);
+    font-size: 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+
+  .footer-logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(0,255,136,0.4);
+  }
+
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(200,230,201,0.3);
+    letter-spacing: 2px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    animation: pulse-glow 1.5s ease-in-out infinite;
+  }
+
+  /* COMPARISON TABLE */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+  }
+
+  .compare-table th {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--green);
+    text-transform: uppercase;
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 2px solid var(--green);
+  }
+
+  .compare-table td {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    color: rgba(200,230,201,0.7);
+  }
+
+  .compare-table tr:hover td { background: rgba(0,255,136,0.02); }
+
+  .compare-table td:first-child { color: white; font-weight: 500; }
+
+  .check { color: var(--green); font-size: 16px; }
+  .cross { color: rgba(200,230,201,0.2); }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .specs-strip { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { grid-template-columns: 1fr; }
+    .models-grid { grid-template-columns: 1fr; }
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ЧЕРЕМ<span>ША</span></div>
+  <ul>
+    <li><a href="#">Продукты</a></li>
+    <li><a href="#">Характеристики</a></li>
+    <li><a href="#">Сравнение</a></li>
+    <li><a href="#">О нас</a></li>
+  </ul>
+  <a href="#" class="nav-badge">КУПИТЬ</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span class="live-dot"></span>
+      Новое поколение — 2026
+    </div>
+    <h1>
+      ЧЕРЕМ
+      <span class="glow">ША</span>
+    </h1>
+    <div class="hero-sub">Allium ursinum — PRO MAX ULTRA</div>
+    <p class="hero-desc">
+      Революционное растение с мощнейшим запахом и производительностью уровня enterprise.
+      Черемша нового поколения — это не просто еда. Это технология.
+    </p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary">Купить сейчас</a>
+      <a href="#" class="btn-secondary">Узнать больше</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="product-showcase">
+      <div class="product-frame">
+        <img src="cheremsha.jpg" alt="Черемша Pro Max" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="img-placeholder" style="display:none;">
+          <div class="big-icon">🌿</div>
+          <div class="label">ЧЕРЕМША.JPG</div>
+        </div>
+        <div class="product-label">ЧЕРЕМША PRO MAX</div>
+      </div>
+      <div class="specs-ticker">
+        <span>
+          &nbsp;&nbsp;&nbsp; ЗАПАХ: 9999/10 &nbsp;&nbsp;◆&nbsp;&nbsp; МОЩНОСТЬ: МАКСИМАЛЬНАЯ &nbsp;&nbsp;◆&nbsp;&nbsp; ОПЕРАТИВНАЯ ПАМЯТЬ: НЕОГРАНИЧЕНА &nbsp;&nbsp;◆&nbsp;&nbsp; СДЕЛАНО В СССР &nbsp;&nbsp;◆&nbsp;&nbsp; ЧЕРЕМША.ЕXE ЗАПУЩЕНА &nbsp;&nbsp;◆&nbsp;&nbsp;
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS STRIP -->
+<div class="specs-strip">
+  <div class="spec-item">
+    <span class="spec-num">9.8</span>
+    <span class="spec-label">Запах (балл)</span>
+  </div>
+  <div class="spec-item">
+    <span class="spec-num">0мс</span>
+    <span class="spec-label">Задержка вкуса</span>
+  </div>
+  <div class="spec-item">
+    <span class="spec-num">∞</span>
+    <span class="spec-label">Листьев в пучке</span>
+  </div>
+  <div class="spec-item">
+    <span class="spec-num">6x</span>
+    <span class="spec-label">Цитат в тексте</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-num">01 /</span>
+    <h2 class="section-title">Ключевые Характеристики</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🧄</div>
+      <div class="feature-title">Запах нового уровня</div>
+      <div class="feature-desc">Передовая чесночная архитектура обеспечивает запах, который не оставит никого равнодушным. Гарантированно.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌿</div>
+      <div class="feature-title">Листья Pro Display</div>
+      <div class="feature-desc">Зеленые листья с широким охватом — до 30 см в длину. ProMotion-поддержка ветра. Технология Natural Green XDR.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">Молниеносный Рост</div>
+      <div class="feature-desc">Новый биологический чип A17 Черемша обеспечивает рост со скоростью до 3мм/сутки. В 2 раза быстрее предыдущего поколения.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏔️</div>
+      <div class="feature-title">Живёт где угодно</div>
+      <div class="feature-desc">Работает в экстремальных условиях: леса, горы, огороды бабушек. Встроенная система защиты от морозов до -15°C.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💊</div>
+      <div class="feature-title">Биологически активна</div>
+      <div class="feature-desc">Более 400 активных соединений. Природный антибиотик, антиоксидант и просто хорошее растение. Одобрено дедушкой.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🇷🇺</div>
+      <div class="feature-title">Сделано в СССР</div>
+      <div class="feature-desc">Классический дизайн, проверенный десятилетиями. Черемша не нуждается в редизайне — она идеальна изначально.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section">
+  <div class="quote-label">// Официальная документация</div>
+  <blockquote>
+    В Советском Союзе делали это тихо не спеша не дыша ни шиша четыре карандаша ни пержа ни жужжа ни гроша <strong>черемша</strong> не тужа лёжа дрожа <strong>черемша</strong> Вароша без ковша со второго этажа без гаража без экипажа без лишнего багажа без массажа без монтажа без камуфляжа <strong>Черемша</strong> для антуража без знания падежа без мятежа в три ножа два коржа <strong>Черемша</strong> без репортажа без стажа с лицом водя с душой моржа с повадкой ежа с запахом моржа и снова. <strong>Черемша</strong>
+  </blockquote>
+  <div class="quote-source">— Неизвестный поэт, Советский Союз, год неизвестен</div>
+</section>
+
+<!-- MODELS -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-num">02 /</span>
+    <h2 class="section-title">Выберите Модель</h2>
+  </div>
+  <div class="models-grid">
+    <div class="model-card">
+      <div class="model-name">Черемша</div>
+      <div class="model-subtitle">Базовая комплектация</div>
+      <div class="model-price">₽ 49</div>
+      <div class="model-price-note">за пучок</div>
+      <ul class="model-features">
+        <li>Стандартный запах</li>
+        <li>5–7 листьев в пучке</li>
+        <li>Рос в лесу</li>
+        <li>Бесплатная доставка от 500г</li>
+      </ul>
+      <a href="#" class="btn-secondary" style="width:100%;text-align:center;display:block;">Выбрать</a>
+    </div>
+    <div class="model-card featured">
+      <div class="model-badge">ХИТ</div>
+      <div class="model-name">Черемша Pro</div>
+      <div class="model-subtitle">Усиленная версия</div>
+      <div class="model-price">₽ 129</div>
+      <div class="model-price-note">за пучок отборной</div>
+      <ul class="model-features">
+        <li>Запах +40% мощнее</li>
+        <li>10–15 листьев отборных</li>
+        <li>Горный экземпляр</li>
+        <li>Органик-сертификат</li>
+      </ul>
+      <a href="#" class="btn-primary" style="width:100%;text-align:center;display:block;">Выбрать</a>
+    </div>
+    <div class="model-card">
+      <div class="model-name">Черемша Ultra</div>
+      <div class="model-subtitle">Для настоящих ценителей</div>
+      <div class="model-price">₽ 499</div>
+      <div class="model-price-note">за лимитированный пучок</div>
+      <ul class="model-features">
+        <li>Максимальный запах</li>
+        <li>Ручной сбор на рассвете</li>
+        <li>Подписана агрономом</li>
+        <li>Титановая упаковка</li>
+      </ul>
+      <a href="#" class="btn-secondary" style="width:100%;text-align:center;display:block;">Выбрать</a>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="section" style="padding-top:0;">
+  <div class="section-header">
+    <span class="section-num">03 /</span>
+    <h2 class="section-title">Черемша vs Конкуренты</h2>
+  </div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Характеристика</th>
+        <th>Черемша</th>
+        <th>Обычный чеснок</th>
+        <th>Петрушка</th>
+        <th>Укроп</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Запах уровня ULTRA</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td>Растёт в дикой природе</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td>Упомянута в поэзии</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td>Одобрена в СССР</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="check">✓</span></td>
+      </tr>
+      <tr>
+        <td>Есть слово "черемша"</td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ЧЕРЕМША™</div>
+  <div class="footer-copy">© 2026 Черемша Technologies Inc. Все права защищены. Allium ursinum.</div>
+</footer>
+
+</body>
+</html>
